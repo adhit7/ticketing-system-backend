@@ -1,5 +1,5 @@
 import express from 'express';
-import { loginMentor, logoutMentor } from '../controllers/mentorController';
+import { loginMentor, logoutMentor } from '../controllers/mentorController.js';
 
 const router = express.Router();
 

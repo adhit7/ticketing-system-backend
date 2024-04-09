@@ -1,5 +1,7 @@
 import express from 'express';
 import {
+  loginAdmin,
+  logoutAdmin,
   createLearner,
   createMentor,
   createBatch,
@@ -7,6 +9,9 @@ import {
 import { protect } from '../middleware/authmiddleware.js';
 
 const router = express.Router();
+
+// @desc  Login
+router.route('/login').post(loginAdmin);
 
 // @desc  Create Learner
 router.route('/learner/create').post(protect, createLearner);
@@ -16,5 +21,8 @@ router.route('/mentor/create').post(protect, createMentor);
 
 // @desc  Create Batch
 router.route('/batch/create').post(protect, createBatch);
+
+// @desc  Login
+router.route('/logout').post(logoutAdmin);
 
 export default router;

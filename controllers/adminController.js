@@ -19,7 +19,6 @@ const createAdmin = asyncHandler(async (req, res) => {
 
   const admin = await Admin.create({
     name,
-
     email,
     password,
   });
@@ -51,6 +50,7 @@ const loginAdmin = asyncHandler(async (req, res) => {
       _id: admin._id,
       name: admin.name,
       email: admin.email,
+      role: 'admin',
     });
   } else {
     res.status(401);

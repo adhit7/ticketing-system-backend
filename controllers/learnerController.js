@@ -18,6 +18,7 @@ const loginLearner = asyncHandler(async (req, res) => {
       firstName: learner.firstName,
       lastName: learner.lastName,
       email: learner.email,
+      role: 'learner',
     });
   } else {
     res.status(401);

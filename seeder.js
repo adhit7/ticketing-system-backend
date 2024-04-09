@@ -1,4 +1,3 @@
-import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 import admin from './data/admin.js';
 import Admin from './models/Admin.js';
@@ -21,4 +20,4 @@ const importAdmin = async () => {
   }
 };
 
-export { importAdmin };
+importAdmin();

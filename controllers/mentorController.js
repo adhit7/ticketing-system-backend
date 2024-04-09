@@ -20,6 +20,7 @@ const loginMentor = asyncHandler(async (req, res) => {
       firstName: mentor.firstName,
       lastName: mentor.lastName,
       email: mentor.email,
+      role: 'mentor',
     });
   } else {
     res.status(401);
@@ -67,6 +68,7 @@ const newPassword = asyncHandler(async (req, res) => {
       _id: mentor._id,
       name: mentor.name,
       email: mentor.email,
+      role: 'mentor',
     });
   } else {
     res.status(404);
