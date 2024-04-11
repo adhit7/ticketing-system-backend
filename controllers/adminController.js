@@ -191,6 +191,7 @@ const createBatch = asyncHandler(async (req, res) => {
   if (batch) {
     res.status(201).json({
       courseName: courseName,
+      message: `${courseName} batch has created successfully`,
     });
   } else {
     res.status(400);
