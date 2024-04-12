@@ -5,6 +5,7 @@ import {
   createLearner,
   createMentor,
   createBatch,
+  getAllBatch,
 } from '../controllers/adminController.js';
 import { protect } from '../middleware/authmiddleware.js';
 
@@ -21,6 +22,8 @@ router.route('/mentor/create').post(protect, createMentor);
 
 // @desc  Create Batch
 router.route('/batch/create').post(protect, createBatch);
+
+router.route('/batch/all').get(getAllBatch);
 
 // @desc  Login
 router.route('/logout').post(logoutAdmin);

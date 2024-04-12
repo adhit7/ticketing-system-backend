@@ -70,7 +70,7 @@ const logoutAdmin = asyncHandler(async (req, res) => {
 // @route   POST /admin/learner/create
 // @access  Private
 const createLearner = asyncHandler(async (req, res) => {
-  const { firstName, lastName, email, password, batchName } = req.body;
+  const { firstName, lastName, email, batchName } = req.body;
 
   const learnerExists = await Learner.findOne({ email });
 
@@ -79,23 +79,25 @@ const createLearner = asyncHandler(async (req, res) => {
     throw new Error('User already exists');
   }
 
-  const batch = await Batch.find({ courseName: batchName });
+  const batch = await Batch.findOne({ courseName: batchName });
 
   if (!batch) {
     res.status(400);
     throw new Error('Please give correct batch name');
   }
 
+  const tempToken = uuidv4();
+
   const learner = await Learner.create({
     firstName,
     lastName,
     email,
-    password,
     batch: batchName,
+    tempToken,
   });
 
   if (learner) {
-    batch.students = batch.students.push(learner?._id?.toString());
+    batch.students.push(learner.email);
 
     await batch.save();
 
@@ -108,6 +110,7 @@ const createLearner = asyncHandler(async (req, res) => {
       firstName: learner.firstName,
       lastName: learner.lastName,
       email: learner.email,
+      message: 'Learner has created successfully',
     });
   } else {
     res.status(400);
@@ -119,16 +122,15 @@ const createLearner = asyncHandler(async (req, res) => {
 // @route   POST /admin/mentor/create
 // @access  Private
 const createMentor = asyncHandler(async (req, res) => {
-  const { firstName, lastName, email, batchName } = req.body;
+  const { firstName, lastName, email, batches } = req.body;
 
   const mentorExists = await Mentor.findOne({ email });
-
   if (mentorExists) {
     res.status(400);
     throw new Error('User already exists');
   }
 
-  const batch = await Batch.find({ courseName: batchName });
+  const batch = await Batch.find({ courseName: batches });
 
   if (!batch) {
     res.status(400);
@@ -137,7 +139,7 @@ const createMentor = asyncHandler(async (req, res) => {
 
   const tempToken = uuidv4();
 
-  const mentor = await User.create({
+  const mentor = await Mentor.create({
     firstName,
     lastName,
     email,
@@ -145,11 +147,24 @@ const createMentor = asyncHandler(async (req, res) => {
   });
 
   if (mentor) {
-    batch.mentor = mentor?._id?.toString();
+    //Updating Mentor email id in Batch data
+    const updateOps = batch.map((record) => {
+      const updateOp = {
+        updateOne: {
+          filter: {
+            courseName: record.courseName,
+          },
+          update: {
+            mentor: mentor.email,
+          },
+        },
+      };
+      return updateOp;
+    });
 
-    await batch.save();
+    await Batch.bulkWrite(updateOps);
 
-    mentor.batch = mentor.batch.push(batchName);
+    mentor.batch = mentor.batch.concat(batches);
 
     await mentor.save();
 
@@ -162,6 +177,7 @@ const createMentor = asyncHandler(async (req, res) => {
       firstName: mentor.firstName,
       lastName: mentor.lastName,
       email: mentor.email,
+      message: 'Mentor has created successfully',
     });
   } else {
     res.status(400);
@@ -199,6 +215,18 @@ const createBatch = asyncHandler(async (req, res) => {
   }
 });
 
+const getAllBatch = asyncHandler(async (req, res) => {
+  try {
+    const batches = await Batch.find({});
+    res.status(200).json({
+      batches,
+    });
+  } catch (error) {
+    res.status(400);
+    throw new Error('Invalid data');
+  }
+});
+
 const assignQuery = asyncHandler(async (req, res) => {
   const { courseName } = req.body;
 });
@@ -210,4 +238,5 @@ export {
   createLearner,
   createMentor,
   createBatch,
+  getAllBatch,
 };

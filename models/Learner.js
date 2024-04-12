@@ -18,7 +18,6 @@ const learnerSchema = mongoose.Schema(
     },
     password: {
       type: String,
-      required: true,
     },
     tempToken: {
       type: String,
