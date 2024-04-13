@@ -103,7 +103,7 @@ const createLearner = asyncHandler(async (req, res) => {
 
     const name = `${learner.firstName}  ${learner.lastName}`;
 
-    sendCredentialMail(name, email, tempToken);
+    sendCredentialMail(name, email, tempToken, 'learner');
 
     res.status(201).json({
       _id: learner._id,
@@ -170,7 +170,7 @@ const createMentor = asyncHandler(async (req, res) => {
 
     const name = `${mentor.firstName}  ${mentor.lastName}`;
 
-    sendCredentialMail(name, email, tempToken);
+    sendCredentialMail(name, email, tempToken, 'mentor');
 
     res.status(201).json({
       _id: mentor._id,

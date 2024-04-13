@@ -1,6 +1,6 @@
 import { mailTransporter } from './mailTransporter.js';
 
-const sendForgotPasswordMail = (name, email, tempToken) => {
+const sendForgotPasswordMail = (name, email, tempToken, role) => {
   const transporter = mailTransporter();
 
   let mailDetails = {
@@ -10,7 +10,7 @@ const sendForgotPasswordMail = (name, email, tempToken) => {
     html: `<p>Hello ${name} 👋</p> 
     <p>Please below the temporary password and below link to reset your new password.</p>
     <p>Temporary Password:- ${tempToken}</p>
-    <a href="${process.env.Client_URL}/user/new-password/${tempToken}" target="_blank">Reset your password</a>`,
+    <a href="${process.env.Client_URL}/${role}/new-password/${tempToken}" target="_blank">Reset your password</a>`,
   };
 
   transporter.sendMail(mailDetails, (err, data) => {

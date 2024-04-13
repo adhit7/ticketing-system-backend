@@ -29,11 +29,11 @@ const loginMentor = asyncHandler(async (req, res) => {
 });
 
 // @desc    temporary password for user
-// @route   GET /mentor/temp-token/:token
+// @route   POST /mentor/temp-token/:token
 // @access  Private
 const tempPassword = asyncHandler(async (req, res) => {
-  const { token } = req.params;
-  const mentor = await Mentor.findOne({ tempToken: token });
+  const { tempToken } = req.body;
+  const mentor = await Mentor.findOne({ tempToken });
 
   if (mentor) {
     res.json({
@@ -57,7 +57,7 @@ const newPassword = asyncHandler(async (req, res) => {
   const mentor = await Mentor.findOne({ tempToken });
 
   if (mentor) {
-    mentor.tempPassword = '';
+    mentor.tempToken = '';
     mentor.password = password;
 
     await mentor.save();
@@ -91,9 +91,9 @@ const forgotPassword = asyncHandler(async (req, res) => {
 
     mentor.tempToken = tempToken;
 
-    await user.save();
+    await mentor.save();
 
-    sendForgotPasswordMail(name, email, tempToken);
+    sendForgotPasswordMail(name, email, tempToken, 'mentor');
 
     res.json({
       message: 'Reset password link has been sent to your mail',
