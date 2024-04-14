@@ -1,11 +1,13 @@
 import mongoose from 'mongoose';
 
-const querySchema = new Schema({
+const ObjectId = mongoose.Schema.Types.ObjectId;
+
+const querySchema = mongoose.Schema({
   title: {
     type: String,
-    minlength: 5,
-    maxlength: 255,
-    trim: true,
+    // minlength: 5,
+    // maxlength: 255,
+    // trim: true,
     required: true,
   },
   category: {
@@ -14,17 +16,17 @@ const querySchema = new Schema({
   },
   subCategory: {
     type: String,
+    required: true,
   },
   description: {
     type: String,
-    minlength: 5,
-    maxlength: 1000,
-    trim: true,
+    // minlength: 5,
+    // maxlength: 1000,
+    // trim: true,
     required: true,
   },
   tags: {
     type: [String],
-    required: true,
   },
   preferredLanguage: {
     type: String,
@@ -40,18 +42,14 @@ const querySchema = new Schema({
       required: true,
     },
   },
-  rasiedBy: {
+  raisedBy: {
     type: ObjectId,
     required: true,
-    ref: 'User',
+    ref: 'Learner',
   },
   assignedTo: {
     type: ObjectId,
-    ref: 'User',
-  },
-  converstationId: {
-    type: ObjectId,
-    ref: 'converstation',
+    ref: 'Mentor',
   },
   solution: {
     type: String,
@@ -59,21 +57,14 @@ const querySchema = new Schema({
     maxlength: 1000,
     trim: true,
   },
-  feedback: {
-    type: String,
-    minlength: 5,
-    maxlength: 1000,
-    trim: true,
-  },
-  rating: {
-    type: Number,
-    min: 0,
-    max: 5,
-  },
   status: {
     type: String,
-    enum: [UNASSIGNED, ASSIGNED, RESOLVED, OPEN, CLOSE, REOPEN],
-    default: UNASSIGNED,
+    enum: ['UNASSIGNED', 'ASSIGNED', 'RESOLVED', 'OPEN', 'CLOSE'],
+    default: 'UNASSIGNED',
+  },
+  conversation: {
+    type: ObjectId,
+    ref: 'Conversation',
   },
 });
 

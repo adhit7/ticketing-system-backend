@@ -1,5 +1,6 @@
 import asyncHandler from '../middleware/asyncHandler.js';
 import Learner from '../models/Learner.js';
+import Query from '../models/Query.js';
 import generateToken from '../utils/generateToken.js';
 import { sendForgotPasswordMail } from '../utils/sendForgotPasswordMail.js';
 
@@ -111,9 +112,44 @@ const forgotPassword = asyncHandler(async (req, res) => {
   }
 });
 
+const createQuery = asyncHandler(async (req, res) => {
+  const { queryValues } = req.body;
+
+  const learnerId = req.user._id?.toString();
+  const learner = await Learner.findById(learnerId);
+
+  const query = await Query.create({
+    ...queryValues,
+    raisedBy: learnerId,
+  });
+
+  if (query && learner) {
+    //Adding query id to the learner document
+    learner.query.push(query?._id?.toString());
+    await learner.save();
+
+    res.status(201).json({
+      message: 'Your Query has been created',
+    });
+  } else {
+    res.status(400);
+    throw new Error('Invalid data');
+  }
+});
+
 const getAllQueries = asyncHandler(async (req, res) => {
-  res.clearCookie('jwt');
-  res.status(200).json({ message: 'Logged out successfully' });
+  const { email } = req.params;
+  const learner = await Learner.findOne({ email });
+  const queries = await Query.find({ _id: { $in: learner?.query } });
+
+  if (learner && queries) {
+    res.status(200).json({
+      queries,
+    });
+  } else {
+    res.status(400);
+    throw new Error('Invalid data');
+  }
 });
 
 export {
@@ -122,4 +158,6 @@ export {
   newPassword,
   forgotPassword,
   tempPassword,
+  createQuery,
+  getAllQueries,
 };

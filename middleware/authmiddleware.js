@@ -7,7 +7,7 @@ const protect = asyncHandler(async (req, res, next) => {
 
   // Get JWT from the cookie
   token = req.cookies.jwt;
-  role = roles[req.body.role];
+  role = roles[req.body.role || req.params.role];
 
   if (role && token) {
     try {
