@@ -6,6 +6,8 @@ import {
   createMentor,
   createBatch,
   getAllBatch,
+  getAllQueries,
+  assignQuery,
 } from '../controllers/adminController.js';
 import { protect } from '../middleware/authmiddleware.js';
 
@@ -24,6 +26,12 @@ router.route('/mentor/create').post(protect, createMentor);
 router.route('/batch/create').post(protect, createBatch);
 
 router.route('/batch/all').get(getAllBatch);
+
+// @desc  Get All Queries
+router.route('/query/all/:role').get(protect, getAllQueries);
+
+// @desc  Assign Query
+router.route('/query/assign').put(protect, assignQuery);
 
 // @desc  Login
 router.route('/logout').post(logoutAdmin);

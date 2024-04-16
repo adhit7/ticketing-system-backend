@@ -3,6 +3,7 @@ import Admin from '../models/Admin.js';
 import Mentor from '../models/Mentor.js';
 import Learner from '../models/Learner.js';
 import Batch from '../models/Batch.js';
+import Query from '../models/Query.js';
 import generateToken from '../utils/generateToken.js';
 import { v4 as uuidv4 } from 'uuid';
 import { sendCredentialMail } from '../utils/sendCredentialMail.js';
@@ -54,7 +55,7 @@ const loginAdmin = asyncHandler(async (req, res) => {
     });
   } else {
     res.status(401);
-    throw new Error('Invalid username or password');
+    throw new Error('Invalid email or password');
   }
 });
 
@@ -216,19 +217,53 @@ const createBatch = asyncHandler(async (req, res) => {
 });
 
 const getAllBatch = asyncHandler(async (req, res) => {
-  try {
-    const batches = await Batch.find({});
+  const batches = await Batch.find({});
+  if (batches) {
     res.status(200).json({
       batches,
     });
-  } catch (error) {
+  } else {
+    res.status(400);
+    throw new Error('Invalid data');
+  }
+});
+
+const getAllQueries = asyncHandler(async (req, res) => {
+  const queries = await Query.find({});
+  if (queries) {
+    res.status(200).json({
+      queries,
+    });
+  } else {
     res.status(400);
     throw new Error('Invalid data');
   }
 });
 
 const assignQuery = asyncHandler(async (req, res) => {
-  const { courseName } = req.body;
+  const { queryId } = req.body;
+
+  const query = await Query.findById(queryId);
+  const learner = await Learner.findById(query?.raisedBy);
+
+  const mentor = await Mentor.findOne({ batch: learner?.batch });
+
+  if (learner && mentor && query) {
+    query.assignedTo = mentor._id;
+    query.assignedMentorName = `${mentor.firstName} ${mentor.lastName}`;
+    query.status = 'ASSIGNED';
+    await query.save();
+
+    mentor.query.push(query._id?.toString());
+    await learner.save();
+
+    res.status(200).json({
+      message: 'The query is assigned to that batch mentor successfully',
+    });
+  } else {
+    res.status(400);
+    throw new Error('Invalid data');
+  }
 });
 
 export {
@@ -239,4 +274,6 @@ export {
   createMentor,
   createBatch,
   getAllBatch,
+  getAllQueries,
+  assignQuery,
 };

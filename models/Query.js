@@ -51,6 +51,9 @@ const querySchema = mongoose.Schema({
     type: ObjectId,
     ref: 'Mentor',
   },
+  assignedMentorName: {
+    type: String,
+  },
   solution: {
     type: String,
     minlength: 5,
@@ -62,7 +65,7 @@ const querySchema = mongoose.Schema({
     enum: ['UNASSIGNED', 'ASSIGNED', 'RESOLVED', 'OPEN', 'CLOSE'],
     default: 'UNASSIGNED',
   },
-  conversation: {
+  conversationId: {
     type: ObjectId,
     ref: 'Conversation',
   },

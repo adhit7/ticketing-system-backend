@@ -1,19 +1,16 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
-const Schema = mongoose.Schema;
-
-const converstationSchema = new Schema({
-  user: {
-    type: mongoose.Schema.Types.ObjectId,
-    required: true,
-    ref: 'Learner',
+const converstationSchema = mongoose.Schema({
+  userId: {
+    type: String,
   },
-  messages: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Message',
-  },
+  messages: [
+    {
+      messageId: mongoose.Schema.Types.ObjectId,
+    },
+  ],
 });
 
-const Converstation = model('converstation', converstationSchema);
+const Converstation = mongoose.model('converstation', converstationSchema);
 
 export default Converstation;
