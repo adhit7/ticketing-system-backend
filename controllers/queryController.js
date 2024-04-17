@@ -1,36 +1,49 @@
 import asyncHandler from '../middleware/asyncHandler.js';
-import Mentor from '../models/Mentor.js';
-import generateToken from '../utils/generateToken.js';
+import Query from '../models/Query.js';
+import { roles } from '../utils/roles.js';
 
-// @desc    Assign Query
-// @route   GET /query/assign
-// @access  Private
-const assignQuery = asyncHandler(async (req, res) => {
-  const { batchNumber, query } = req.body;
+const getAllQueries = asyncHandler(async (req, res) => {
+  const { email, role } = req.params;
 
-  const getMentor = await Mentor.findOne({ batch: batchNumber });
+  const user = await roles[role]?.findOne({ email });
 
-  if (getMentor) {
-    res.status(400);
-    throw new Error('User already exists');
+  let queries;
+
+  if (role === 'admin') {
+    queries = await Query.find({});
+  } else if (role === 'mentor') {
+    queries = await Query.find({
+      assignedTo: { $in: user?._id?.toString() },
+    });
+  } else if (role === 'learner') {
+    queries = await Query.find({
+      raisedBy: { $in: user?._id?.toString() },
+    });
   }
 
-  const mentor = await User.create({
-    firstName,
-    lastName,
-    email,
-    password,
-  });
-
-  if (mentor) {
-    res.status(201).json({
-      _id: mentor._id,
-      firstName: mentor.firstName,
-      lastName: mentor.lastName,
-      email: mentor.email,
+  if (user && queries) {
+    res.status(200).json({
+      queries,
     });
   } else {
     res.status(400);
-    throw new Error('Invalid user data');
+    throw new Error('Invalid data');
   }
 });
+
+const getQuery = asyncHandler(async (req, res) => {
+  const { queryId } = req.params;
+
+  const query = await Query.findOne({ _id: queryId });
+
+  if (query) {
+    res.status(200).json({
+      query,
+    });
+  } else {
+    res.status(400);
+    throw new Error('Invalid data');
+  }
+});
+
+export { getAllQueries, getQuery };

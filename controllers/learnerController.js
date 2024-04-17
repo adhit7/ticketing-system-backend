@@ -1,5 +1,7 @@
 import asyncHandler from '../middleware/asyncHandler.js';
+import Converstation from '../models/Conversation.js';
 import Learner from '../models/Learner.js';
+import Message from '../models/Message.js';
 import Query from '../models/Query.js';
 import generateToken from '../utils/generateToken.js';
 import { sendForgotPasswordMail } from '../utils/sendForgotPasswordMail.js';
@@ -137,21 +139,6 @@ const createQuery = asyncHandler(async (req, res) => {
   }
 });
 
-const getAllQueries = asyncHandler(async (req, res) => {
-  const { email } = req.params;
-  const learner = await Learner.findOne({ email });
-  const queries = await Query.find({ _id: { $in: learner?.query } });
-
-  if (learner && queries) {
-    res.status(200).json({
-      queries,
-    });
-  } else {
-    res.status(400);
-    throw new Error('Invalid data');
-  }
-});
-
 export {
   loginLearner,
   logoutLearner,
@@ -159,5 +146,4 @@ export {
   forgotPassword,
   tempPassword,
   createQuery,
-  getAllQueries,
 };

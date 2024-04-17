@@ -6,7 +6,6 @@ import {
   newPassword,
   forgotPassword,
   createQuery,
-  getAllQueries,
 } from '../controllers/learnerController.js';
 import { protect } from '../middleware/authmiddleware.js';
 
@@ -26,9 +25,6 @@ router.route('/forgot-password').put(forgotPassword);
 
 // @desc  Create new query
 router.route('/query/create').post(protect, createQuery);
-
-// @desc  Get all queries
-router.route('/query/all/:email/:role').get(protect, getAllQueries);
 
 // @desc  Logout
 router.post('/logout', logoutLearner);

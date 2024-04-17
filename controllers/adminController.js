@@ -228,18 +228,6 @@ const getAllBatch = asyncHandler(async (req, res) => {
   }
 });
 
-const getAllQueries = asyncHandler(async (req, res) => {
-  const queries = await Query.find({});
-  if (queries) {
-    res.status(200).json({
-      queries,
-    });
-  } else {
-    res.status(400);
-    throw new Error('Invalid data');
-  }
-});
-
 const assignQuery = asyncHandler(async (req, res) => {
   const { queryId } = req.body;
 
@@ -274,6 +262,5 @@ export {
   createMentor,
   createBatch,
   getAllBatch,
-  getAllQueries,
   assignQuery,
 };

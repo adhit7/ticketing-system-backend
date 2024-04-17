@@ -3,10 +3,11 @@ import dotenv from 'dotenv';
 import adminRoutes from './routes/adminRoutes.js';
 import learnerRoutes from './routes/learnerRoutes.js';
 import mentorRoutes from './routes/mentorRoutes.js';
+import queryRoutes from './routes/queryRoutes.js';
+import conversationRoutes from './routes/conversationRoutes.js';
 import connectDB from './config/db.js';
 import cookieParser from 'cookie-parser';
 import { Server } from 'socket.io';
-import http from 'http';
 import cors from 'cors';
 import { errorHandler, notFound } from './middleware/errorHandler.js';
 
@@ -28,50 +29,69 @@ app.get('/', (req, res) => {
 app.use('/admin', adminRoutes);
 app.use('/learner', learnerRoutes);
 app.use('/mentor', mentorRoutes);
+app.use('/query', queryRoutes);
+app.use('/conversation', conversationRoutes);
 
 app.use(notFound);
 app.use(errorHandler);
 
 const PORT = process.env.PORT || 4000;
 
-app.listen(PORT, console.log(`Server running on port ${PORT}`));
+const server = app.listen(PORT, console.log(`Server running on port ${PORT}`));
 
-// const io = new Server(server, {
-//   pingTimeout: 60000,
-//   cors: {
-//     orgin: 'http://localhost:5173/',
-//   },
-// });
+const users = new Map();
 
-// io.on('connection', (socket) => {
-//   console.log('socket is connected');
-//   socket.on('setup', (user) => {
-//     socket.join(user?.email);
-//     socket.emit('user socket connected');
-//   });
-// });
+const addUser = (userId, socketId) => {
+  if (users.has(socketId)) {
+    // If the user with the same socketId already exists, update the userId
+    users.get(socketId).userId = userId;
+  } else {
+    users.set(socketId, { userId, socketId });
+  }
+};
 
-// //when ceonnect
-// console.log('a user connected.');
+const removeUser = (socketId) => {
+  users.delete(socketId);
+};
 
-// //take userId and socketId from user
-// socket.on('addUser', (userId) => {
-//   addUser(userId, socket.id);
-//   io.emit('getUsers', users);
-// });
+const getUser = (userId) => {
+  return Array.from(users.values()).find((user) => user.userId === userId);
+};
 
-// //send and get message
-// socket.on('sendMessage', ({ senderId, receiverId, text }) => {
-//   const user = getUser(receiverId);
-//   io.to(user.socketId).emit('getMessage', {
-//     senderId,
-//     text,
-//   });
-// });
+const getUsersByIds = (userIds) => {
+  return Array.from(users.values()).filter((user) =>
+    userIds.includes(user.userId)
+  );
+};
 
-// //when disconnect
-// socket.on('disconnect', () => {
-//   console.log('a user disconnected!');
-//   removeUser(socket.id);
-//   io.emit('getUsers', users);
-// });
+const io = new Server(server, {
+  pingTimeout: 60000,
+  cors: {
+    orgin: 'http://localhost:5173/',
+  },
+});
+
+io.on('connection', (socket) => {
+  console.log('A user connected.');
+
+  socket.on('addUser', (userId) => {
+    addUser(userId, socket.id);
+    io.emit('getUsers', Array.from(users.values()));
+  });
+
+  socket.on('sendMessage', ({ senderId, receiverIds, text }) => {
+    const receivers = getUsersByIds(receiverIds);
+    receivers.forEach((receiver) => {
+      io.to(receiver.socketId).emit('getMessage', {
+        senderId,
+        text,
+      });
+    });
+  });
+
+  socket.on('disconnect', () => {
+    console.log('A user disconnected!');
+    removeUser(socket.id);
+    io.emit('getUsers', Array.from(users.values()));
+  });
+});
