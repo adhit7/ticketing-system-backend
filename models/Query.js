@@ -5,9 +5,6 @@ const ObjectId = mongoose.Schema.Types.ObjectId;
 const querySchema = mongoose.Schema({
   title: {
     type: String,
-    // minlength: 5,
-    // maxlength: 255,
-    // trim: true,
     required: true,
   },
   category: {
@@ -20,9 +17,6 @@ const querySchema = mongoose.Schema({
   },
   description: {
     type: String,
-    // minlength: 5,
-    // maxlength: 1000,
-    // trim: true,
     required: true,
   },
   tags: {
@@ -56,13 +50,10 @@ const querySchema = mongoose.Schema({
   },
   solution: {
     type: String,
-    minlength: 5,
-    maxlength: 1000,
-    trim: true,
   },
   status: {
     type: String,
-    enum: ['UNASSIGNED', 'ASSIGNED', 'RESOLVED', 'OPEN', 'CLOSE'],
+    enum: ['UNASSIGNED', 'ASSIGNED', 'RESOLVED', 'OPEN', 'CLOSED'],
     default: 'UNASSIGNED',
   },
   conversationId: {

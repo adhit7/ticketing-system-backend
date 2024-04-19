@@ -46,4 +46,28 @@ const getQuery = asyncHandler(async (req, res) => {
   }
 });
 
-export { getAllQueries, getQuery };
+const closeQuery = asyncHandler(async (req, res) => {
+  const { queryId, solution } = req.body;
+
+  const query = await Query.findOne({ _id: queryId });
+
+  if (query?.status === 'CLOSED') {
+    res.status(400);
+    throw new Error('This query is already closed, please refresh the page');
+  }
+
+  if (query) {
+    query.solution = solution;
+    query.status = 'CLOSED';
+    query.save();
+
+    res.status(200).json({
+      query,
+    });
+  } else {
+    res.status(400);
+    throw new Error('Invalid data');
+  }
+});
+
+export { getAllQueries, getQuery, closeQuery };

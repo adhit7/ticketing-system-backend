@@ -14,12 +14,12 @@ const startConversation = asyncHandler(async (req, res) => {
   }
 
   const conversation = await Conversation.create({
-    userId: query?.assignedTo?.toString(),
+    queryId: query?._id?.toString(),
   });
 
   if (query && conversation) {
     const message = await Message.create({
-      sender: query?.assignedTo?.toString(),
+      sender: query?._id?.toString(),
       content: content,
       conversationId: conversation._id,
     });
@@ -33,6 +33,7 @@ const startConversation = asyncHandler(async (req, res) => {
       await query.save();
 
       res.status(201).json({
+        _id: conversation._id,
         message: content,
       });
     } else {
@@ -70,6 +71,7 @@ const getConversationMessages = asyncHandler(async (req, res) => {
 
   if (messages) {
     res.status(200).json({
+      _id: conversationId,
       messages,
     });
   } else {
@@ -83,12 +85,40 @@ const sendMessage = asyncHandler(async (req, res) => {
   const query = await Query.findById(queryId);
 
   const conversation = await Conversation.findOne({
-    userId: query?.assignedTo?.toString(),
+    queryId: query?._id?.toString(),
   });
 
-  if (query && conversation) {
-    const user = role === 'mentor' ? query.assignedTo : query.raisedBy;
+  const user = role === 'mentor' ? query?.assignedTo : query?.raisedBy;
 
+  if (!conversation) {
+    const conversation = await Conversation.create({
+      queryId: query?._id?.toString(),
+    });
+
+    if (query && conversation) {
+      const message = await Message.create({
+        sender: user?.toString(),
+        content: content,
+        conversationId: conversation._id,
+      });
+      if (message) {
+        conversation.messages.push({ messageId: message._id });
+        await conversation.save();
+
+        query.conversationId = conversation._id;
+
+        await query.save();
+
+        res.status(201).json({
+          _id: conversation._id,
+          message,
+        });
+      } else {
+        res.status(400);
+        throw new Error('Invalid user data for sending new message');
+      }
+    }
+  } else if (conversation) {
     const message = await Message.create({
       sender: user?.toString(),
       content: content,
@@ -100,7 +130,8 @@ const sendMessage = asyncHandler(async (req, res) => {
       await conversation.save();
 
       res.status(201).json({
-        message: content,
+        _id: conversation._id,
+        message,
       });
     } else {
       res.status(400);

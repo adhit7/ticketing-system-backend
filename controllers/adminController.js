@@ -243,10 +243,11 @@ const assignQuery = asyncHandler(async (req, res) => {
     await query.save();
 
     mentor.query.push(query._id?.toString());
-    await learner.save();
+    await mentor.save();
 
     res.status(200).json({
       message: 'The query is assigned to that batch mentor successfully',
+      query,
     });
   } else {
     res.status(400);

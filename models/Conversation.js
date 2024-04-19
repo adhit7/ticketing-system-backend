@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 
 const converstationSchema = mongoose.Schema({
-  userId: {
+  queryId: {
     type: String,
   },
   messages: [
