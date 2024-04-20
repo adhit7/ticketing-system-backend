@@ -19,7 +19,7 @@ const app = express();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(cors({ credentials: true, origin: true }));
+app.use(cors({ credentials: true }));
 app.use(cookieParser());
 
 app.get('/', (req, res) => {
@@ -42,7 +42,7 @@ const server = app.listen(PORT, console.log(`Server running on port ${PORT}`));
 const io = new Server(server, {
   pingTimeout: 60000,
   cors: {
-    orgin: 'http://localhost:5173/',
+    orgin: process.env.Client_URL,
   },
 });
 
