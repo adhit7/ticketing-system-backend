@@ -1,8 +1,5 @@
 import asyncHandler from '../middleware/asyncHandler.js';
 import Mentor from '../models/Mentor.js';
-import Conversation from '../models/Conversation.js';
-import Message from '../models/Message.js';
-import Query from '../models/Query.js';
 import generateToken from '../utils/generateToken.js';
 import { v4 as uuidv4 } from 'uuid';
 import { sendForgotPasswordMail } from '../utils/sendForgotPasswordMail.js';
