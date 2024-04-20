@@ -51,10 +51,10 @@ const closeQuery = asyncHandler(async (req, res) => {
 
   const query = await Query.findOne({ _id: queryId });
 
-  if (query?.status === 'CLOSED') {
-    res.status(400);
-    throw new Error('This query is already closed, please refresh the page');
-  }
+  // if (query?.status === 'CLOSED') {
+  //   res.status(400);
+  //   throw new Error('This query is already closed, please refresh the page');
+  // }
 
   if (query) {
     query.solution = solution;
