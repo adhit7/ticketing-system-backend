@@ -1,4 +1,4 @@
-# Url Shortener API
+# Ticketing System API
 
 Ticketing System API is used for queries raised by users and will be solved by company.It has realtime chatting functionality for seamless experience<br>
 Frontend Repo - https://github.com/adhit7/ticketing-system-frontend
