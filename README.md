@@ -1,6 +1,6 @@
 # Url Shortener API
 
-Ticketing System API is used for queries raised by users and will be solved by company.<br>
+Ticketing System API is used for queries raised by users and will be solved by company.It has realtime chatting functionality for seamless experience<br>
 Frontend Repo - https://github.com/adhit7/ticketing-system-frontend
 
 ## Local Setup (Create your own .env file and add your variables in it)
