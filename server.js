@@ -48,6 +48,7 @@ const io = new Server(server, {
 
 io.on('connection', (socket) => {
   socket.on('setup', (userData) => {
+    console.log('34444');
     socket.join(userData._id);
     socket.emit('connected');
   });
