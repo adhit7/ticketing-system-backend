@@ -42,7 +42,7 @@ const server = app.listen(PORT, console.log(`Server running on port ${PORT}`));
 const io = new Server(server, {
   pingTimeout: 60000,
   cors: {
-    orgin: process.env.Client_URL,
+    orgin: 'https://zen-class-query.netlify.app/',
   },
 });
 
