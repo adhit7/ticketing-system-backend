@@ -3,6 +3,9 @@ import Conversation from '../models/Conversation.js';
 import Message from '../models/Message.js';
 import Query from '../models/Query.js';
 
+// @desc    Start New Conversation
+// @route   POST /start-conversation
+// @access  Public
 const startConversation = asyncHandler(async (req, res) => {
   const { queryId, content } = req.body;
 
@@ -46,6 +49,9 @@ const startConversation = asyncHandler(async (req, res) => {
   }
 });
 
+// @desc    Get All Messages in Conversation
+// @route   GET /:conversationId/messages/:role
+// @access  Public
 const getConversationMessages = asyncHandler(async (req, res) => {
   const { conversationId } = req.params;
 
@@ -79,6 +85,9 @@ const getConversationMessages = asyncHandler(async (req, res) => {
   }
 });
 
+// @desc    Send Message
+// @route   POST /send-message
+// @access  Public
 const sendMessage = asyncHandler(async (req, res) => {
   const { queryId, content, role } = req.body;
 

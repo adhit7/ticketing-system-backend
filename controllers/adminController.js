@@ -38,7 +38,7 @@ const createAdmin = asyncHandler(async (req, res) => {
 
 // @desc    Login & get token
 // @route   POST /admin/login
-// @access  Public
+// @access  Private
 const loginAdmin = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
 
@@ -228,6 +228,9 @@ const getAllBatch = asyncHandler(async (req, res) => {
   }
 });
 
+// @desc    Assign Query
+// @route   POST /query/assign
+// @access  Private
 const assignQuery = asyncHandler(async (req, res) => {
   const { queryId } = req.body;
 

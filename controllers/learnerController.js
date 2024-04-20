@@ -113,6 +113,9 @@ const forgotPassword = asyncHandler(async (req, res) => {
   }
 });
 
+// @desc    Create Query
+// @route   POST /query/create
+// @access  Public
 const createQuery = asyncHandler(async (req, res) => {
   const { queryValues } = req.body;
 

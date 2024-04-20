@@ -24,6 +24,7 @@ router.route('/mentor/create').post(protect, createMentor);
 // @desc  Create Batch
 router.route('/batch/create').post(protect, createBatch);
 
+// @desc  All Batch
 router.route('/batch/all').get(getAllBatch);
 
 // @desc  Assign Query
