@@ -111,7 +111,8 @@ const createLearner = asyncHandler(async (req, res) => {
       firstName: learner.firstName,
       lastName: learner.lastName,
       email: learner.email,
-      message: 'Learner has created successfully',
+      message:
+        'Learner has created successfully and forwarded the login credentials to their email',
     });
   } else {
     res.status(400);
@@ -178,7 +179,8 @@ const createMentor = asyncHandler(async (req, res) => {
       firstName: mentor.firstName,
       lastName: mentor.lastName,
       email: mentor.email,
-      message: 'Mentor has created successfully',
+      message:
+        'Mentor has created successfully and forwarded the login credentials to their email',
     });
   } else {
     res.status(400);
