@@ -25,6 +25,19 @@ Admin: (To get into admin route, you have to just remove other login route names
 -Email: admin@gmail.com <br >
 -password: 12345 <br >
 
+## 📸 Screenshots
+
+Login Page
+![Login Page](https://github.com/user-attachments/assets/672400c5-9b8e-439f-8b02-81690abbbc37)
+
+Admin Home Page
+![Admin Home  Page](https://github.com/user-attachments/assets/350ce383-9f8c-4e01-8946-76c387a57f64)
+
+Learner Home Page
+![Learner Home Page](https://github.com/user-attachments/assets/9ab36d22-61d7-4d1c-b414-8cfcc3838f91)
+
+
+
 ## Local Setup (Create your own .env file and add your variables in it)
 
 ```sh
