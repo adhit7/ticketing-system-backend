@@ -9,6 +9,7 @@ Frontend Repo - https://github.com/adhit7/ticketing-system-frontend
 - Create batches, learners, and mentors.
 - Assign mentors to batch queries raised by learners.
 - Monitor ongoing conversations and close queries with solutions.
+- Email Verification: Automatically send credentials (including a temporary password) to learners and mentors via email when creating their accounts. They can later change this password.
 
 ### Learner:
 - Create and submit queries.
