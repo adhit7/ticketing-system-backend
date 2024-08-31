@@ -3,6 +3,7 @@
 
 Ticketing System is a full-stack application built using the MERN stack, designed to manage user queries with role-based access for Admins, Learners, and Mentors. The platform features real-time chat functionality, enabling seamless communication and efficient resolution of queries.<br>
 Frontend Repo - https://github.com/adhit7/ticketing-system-frontend
+Banckend Deployed link - https://ticketing-system-backend-gdz3.onrender.com/
 
 ## 🌟 Key Features
 
